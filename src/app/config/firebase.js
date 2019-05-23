@@ -1,8 +1,8 @@
 import firebase from 'firebase'
 import 'firebase/firestore'
 
-// Your web app's Firebase configuration
-var firebaseConfig = {
+// Shashank web app's Firebase configuration
+const firebaseConfig = {
   apiKey: 'AIzaSyBdycS-ev8PsirXNdpCs2ufID8KGX5ylgg',
   authDomain: 're-vents-241317.firebaseapp.com',
   databaseURL: 'https://re-vents-241317.firebaseio.com',
@@ -13,12 +13,7 @@ var firebaseConfig = {
 }
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig)
-const firestore = firebase.firestore()
+firebase.initializeApp(firebaseConfig);
+firebase.firestore();
 
-const settings = {
-  timestampsInSnapshots: true
-}
-firestore.settings(settings)
-
-export default firebase
+export default firebase;
