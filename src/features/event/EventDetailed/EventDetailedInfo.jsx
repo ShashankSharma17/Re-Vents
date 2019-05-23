@@ -24,7 +24,7 @@ class EventDetailedInfo extends Component {
     const { event } = this.props
     let eventDate
     if (event.date) {
-      eventDate = event.date.toDate()
+      eventDate = event.date
     }
     return (
       <Segment.Group>

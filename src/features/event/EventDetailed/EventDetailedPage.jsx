@@ -1,57 +1,72 @@
 import React, { Component } from 'react'
 import { Grid } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { firestoreConnect, isEmpty } from 'react-redux-firebase'
-import { compose } from 'redux'
-import UserDetailedHeader from './UserDetailedHeader'
-import UserDetailedDescription from './UserDetailedDescription'
-import UserDetailedPhotos from './UserDetailedPhotos'
-import UserDetailedSidebar from './UserDetailedSidebar'
-import UserDetailedEvents from './UserDetailedEvents'
-import { userDetailedQuery } from '../userQueries'
-import LoadingComponent from '../../../app/layout/LoadingComponent'
+import { withFirestore } from 'react-redux-firebase'
+import EventDetailedHeader from './EventDetailedHeader'
+import EventDetailedInfo from './EventDetailedInfo'
+import EventDetailedChat from './EventDetailedChat'
+import EventDetailedSidebar from './EventDetailedSidebar'
+import { objectToArray } from '../../../app/common/util/helpers'
+import { goingToEvent, cancelGoingToEvent } from '../../user/userActions'
 
-const mapState = (state, ownProps) => {
-  let userUid = null
-  let profile = {}
+const mapState = state => {
+  let event = {}
 
-  if (ownProps.match.params.id === state.auth.uid) {
-    profile = state.firebase.profile
-  } else {
-    profile =
-      !isEmpty(state.firestore.ordered.profile) &&
-      state.firestore.ordered.profile[0]
-    userUid = ownProps.match.params.id
+  if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
+    event = state.firestore.ordered.events[0]
   }
+
   return {
-    profile,
-    userUid,
-    auth: state.firebase.auth,
-    photos: state.firestore.ordered.photos,
-    requesting: state.firestore.status.requesting
+    event,
+    auth: state.firebase.auth
   }
 }
 
-class UserDetailedPage extends Component {
-  render() {
-    const { profile, photos, auth, match, requesting } = this.props
-    const isCurrentUser = auth.uid === match.params.id
-    const loading = Object.values(requesting).some(a => a === true)
+const actions = {
+  goingToEvent,
+  cancelGoingToEvent
+}
 
-    if (loading) return <LoadingComponent inverted={true} />
+class EventDetailedPage extends Component {
+  async componentDidMount() {
+    const { firestore, match } = this.props
+    await firestore.setListener(`events/${match.params.id}`)
+  }
+
+  async componentWillUnmount() {
+    const { firestore, match } = this.props
+    await firestore.unsetListener(`events/${match.params.id}`)
+  }
+
+  render() {
+    const { event, auth, goingToEvent, cancelGoingToEvent } = this.props
+    const attendees = event && event.attendees && objectToArray(event.attendees)
+    const isHost = event.hostUid === auth.uid
+    const isGoing = attendees && attendees.some(a => a.id === auth.uid)
     return (
       <Grid>
-        <UserDetailedHeader profile={profile} />
-        <UserDetailedDescription profile={profile} />
-        <UserDetailedSidebar isCurrentUser={isCurrentUser} />
-        {photos && photos.length > 0 && <UserDetailedPhotos photos={photos} />}
-        <UserDetailedEvents />
+        <Grid.Column width={10}>
+          <EventDetailedHeader
+            event={event}
+            isHost={isHost}
+            isGoing={isGoing}
+            goingToEvent={goingToEvent}
+            cancelGoingToEvent={cancelGoingToEvent}
+          />
+          <EventDetailedInfo event={event} />
+          <EventDetailedChat />
+        </Grid.Column>
+        <Grid.Column width={6}>
+          <EventDetailedSidebar attendees={attendees} />
+        </Grid.Column>
       </Grid>
     )
   }
 }
 
-export default compose(
-  connect(mapState),
-  firestoreConnect((auth, userUid) => userDetailedQuery(auth, userUid))
-)(UserDetailedPage)
+export default withFirestore(
+  connect(
+    mapState,
+    actions
+  )(EventDetailedPage)
+)

@@ -25,7 +25,7 @@ const EventDetailedHeader = ({
 }) => {
   let eventDate
   if (event.date) {
-    eventDate = event.date.toDate()
+    eventDate = event.date
   }
   return (
     <Segment.Group>
