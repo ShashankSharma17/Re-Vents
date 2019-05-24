@@ -28,7 +28,8 @@ const mapState = (state, ownProps) => {
 
   return {
     initialValues: event,
-    event
+    event,
+    loading: state.async.loading
   }
 }
 
@@ -121,11 +122,18 @@ class EventForm extends Component {
   }
 
   render() {
-    const { invalid, submitting, pristine, event, cancelToggle } = this.props
+    const {
+      invalid,
+      submitting,
+      pristine,
+      event,
+      cancelToggle,
+      loading
+    } = this.props
     return (
       <Grid>
         <Script
-          url='https://maps.googleapis.com/maps/api/js?key=AIzaSyDUX8SIqI2_TkxTUFkNQeqIyO4urAqgrt0&libraries=places'
+          url='https://maps.googleapis.com/maps/api/js?key=AIzaSyC1Oy3Ic6JyE6RR4eEbEFw2T-ynXjjWzTc&libraries=places'
           onLoad={this.handleScriptLoaded}
         />
         <Grid.Column width={10}>
@@ -185,13 +193,18 @@ class EventForm extends Component {
                 placeholder='Date and time of event'
               />
               <Button
+                loading={loading}
                 disabled={invalid || submitting || pristine}
                 positive
                 type='submit'
               >
                 Submit
               </Button>
-              <Button onClick={this.props.history.goBack} type='button'>
+              <Button
+                disabled={loading}
+                onClick={this.props.history.goBack}
+                type='button'
+              >
                 Cancel
               </Button>
               <Button
