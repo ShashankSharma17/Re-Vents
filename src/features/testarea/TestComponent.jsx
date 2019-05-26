@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-// import Script from 'react-load-script'
+// import Script from 'react-load-script';
+// import GoogleMapReact from 'google-map-react';
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng
 } from 'react-places-autocomplete'
-import { incrementAsync, decrementAsync } from './testActions'
+import { incrementAsync, decrementAsync, testPermissions } from './testActions'
 import { openModal } from '../modals/modalActions'
 
 const mapState = state => ({
@@ -17,8 +18,11 @@ const mapState = state => ({
 const actions = {
   incrementAsync,
   decrementAsync,
-  openModal
+  openModal,
+  testPermissions
 }
+
+// const Marker = () => <Icon name='marker' size='big' color='red'/>
 
 class TestComponent extends Component {
   static defaultProps = {
@@ -60,16 +64,11 @@ class TestComponent extends Component {
       decrementAsync,
       data,
       openModal,
-      loading
+      loading,
+      testPermissions
     } = this.props
     return (
       <div>
-        {/*
-          <Script
-            url='https://maps.googleapis.com/maps/api/js?key=AIzaSyDUX8SIqI2_TkxTUFkNQeqIyO4urAqgrt0&libraries=places'
-            onLoad={this.handleScriptLoad}
-          />
-        */}
         <h1>Test Area</h1>
         <h3>The answer is: {data}</h3>
         <Button
@@ -88,6 +87,11 @@ class TestComponent extends Component {
           onClick={() => openModal('TestModal', { data: 42 })}
           color='teal'
           content='Open Modal'
+        />
+        <Button
+          onClick={testPermissions}
+          color='teal'
+          content='Test Permissions'
         />
         <br />
         <br />
