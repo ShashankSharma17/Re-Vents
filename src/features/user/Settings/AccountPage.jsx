@@ -8,13 +8,13 @@ import {
   Button,
   Icon
 } from 'semantic-ui-react'
-import { Field, reduxForm } from 'redux-form'
 import {
   combineValidators,
   matchesField,
   isRequired,
   composeValidators
 } from 'revalidate'
+import { Field, reduxForm } from 'redux-form'
 import TextInput from '../../../app/common/form/TextInput'
 
 const validate = combineValidators({

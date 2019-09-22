@@ -18,5 +18,4 @@ class EventListAttendee extends Component {
     )
   }
 }
-
 export default EventListAttendee

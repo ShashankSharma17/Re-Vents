@@ -1,5 +1,5 @@
-import { LOGIN_USER, SIGN_OUT_USER } from './authConstants';
-import { createReducer } from '../../app/common/util/reducerUtil';
+import { SIGN_OUT_USER, LOGIN_USER } from './authConstants'
+import { createReducer } from '../../app/common/util/reducerUtil'
 
 const initialState = {
   currentUser: {}
@@ -9,7 +9,7 @@ export const loginUser = (state, payload) => {
   return {
     ...state,
     authenticated: true,
-    currentUser: payload.creds.email 
+    currentUser: payload.creds.email
   }
 }
 

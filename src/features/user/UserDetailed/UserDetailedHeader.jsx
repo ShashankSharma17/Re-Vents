@@ -3,12 +3,7 @@ import { Grid, Header, Item, Segment } from 'semantic-ui-react'
 import differenceInYears from 'date-fns/difference_in_years'
 
 const UserDetailedHeader = ({ profile }) => {
-  let age
-  if (profile.dateOfBirth) {
-    age = differenceInYears(Date.now(), profile.dateOfBirth.toDate())
-  } else {
-    age = 'unknown age'
-  }
+  const age = differenceInYears(Date.now(), profile.dateOfBirth)
   return (
     <Grid.Column width={16}>
       <Segment>
@@ -25,7 +20,8 @@ const UserDetailedHeader = ({ profile }) => {
               <Header as='h3'>{profile.occupation}</Header>
               <br />
               <Header as='h3'>
-                {age}, Lives in {profile.city || 'unknown city'}
+                {age || 'Unknown age'}, Lives in{' '}
+                {profile.city || 'Unknown city'}
               </Header>
             </Item.Content>
           </Item>

@@ -1,7 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { firestoreConnect } from 'react-redux-firebase'
-import { compose } from 'redux'
 import {
   Image,
   Segment,
@@ -13,6 +10,9 @@ import {
   Icon
 } from 'semantic-ui-react'
 import { toastr } from 'react-redux-toastr'
+import { connect } from 'react-redux'
+import { firestoreConnect } from 'react-redux-firebase'
+import { compose } from 'redux'
 import Dropzone from 'react-dropzone'
 import Cropper from 'react-cropper'
 import 'cropperjs/dist/cropper.css'
@@ -50,18 +50,11 @@ class PhotosPage extends Component {
     image: {}
   }
 
-  cancelCrop = () => {
-    this.setState({
-      files: [],
-      image: {}
-    })
-  }
-
   uploadImage = async () => {
     try {
       await this.props.uploadProfileImage(this.state.image, this.state.fileName)
       this.cancelCrop()
-      toastr.success('Success', 'Photo has been uploaded')
+      toastr.success('Success!', 'Photo has been uploaded')
     } catch (error) {
       toastr.error('Oops', error.message)
     }
@@ -77,16 +70,21 @@ class PhotosPage extends Component {
 
   handleSetMainPhoto = photo => async () => {
     try {
-      await this.props.setMainPhoto(photo)
+      this.props.setMainPhoto(photo)
     } catch (error) {
       toastr.error('Oops', error.message)
     }
   }
 
+  cancelCrop = () => {
+    this.setState({
+      files: [],
+      image: {}
+    })
+  }
+
   cropImage = () => {
-    if (typeof this.refs.cropper.getCroppedCanvas() === 'undefined') {
-      return
-    }
+    if (typeof this.refs.cropper.getCroppedCanvas() === 'undefined') return
 
     this.refs.cropper.getCroppedCanvas().toBlob(blob => {
       let imageUrl = URL.createObjectURL(blob)
@@ -122,7 +120,7 @@ class PhotosPage extends Component {
             <Dropzone onDrop={this.onDrop} multiple={false}>
               <div style={{ paddingTop: '30px', textAlign: 'center' }}>
                 <Icon name='upload' size='huge' />
-                <Header content='Drop image here or click to upload' />
+                <Header content='Drop image here or click to add' />
               </div>
             </Dropzone>
           </Grid.Column>
@@ -156,11 +154,11 @@ class PhotosPage extends Component {
                 />
                 <Button.Group>
                   <Button
-                    loading={loading}
                     onClick={this.uploadImage}
                     style={{ width: '100px' }}
                     positive
                     icon='check'
+                    loading={loading}
                   />
                   <Button
                     disabled={loading}

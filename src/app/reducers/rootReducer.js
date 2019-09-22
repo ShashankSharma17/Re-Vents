@@ -12,9 +12,9 @@ import asyncReducer from '../../features/async/asyncReducer'
 const rootReducer = combineReducers({
   firebase: firebaseReducer,
   firestore: firestoreReducer,
+  form: FormReducer,
   test: testReducer,
   events: eventReducer,
-  form: FormReducer,
   modals: modalsReducer,
   auth: authReducer,
   async: asyncReducer,

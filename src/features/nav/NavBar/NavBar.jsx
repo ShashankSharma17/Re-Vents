@@ -45,7 +45,6 @@ class NavBar extends Component {
           {authenticated && (
             <Menu.Item as={NavLink} to='/people' name='People' />
           )}
-
           {authenticated && (
             <Menu.Item>
               <Button
@@ -66,8 +65,8 @@ class NavBar extends Component {
             />
           ) : (
             <SignedOutMenu
-              register={this.handleRegister}
               signIn={this.handleSignIn}
+              register={this.handleRegister}
             />
           )}
         </Container>

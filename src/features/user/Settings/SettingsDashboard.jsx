@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import { Grid } from 'semantic-ui-react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import SettingsNav from './SettingsNav'
+import BasicPage from './BasicPage'
 import AboutPage from './AboutPage'
 import PhotosPage from './PhotosPage'
 import AccountPage from './AccountPage'
-import BasicPage from './BasicPage'
 import { updatePassword } from '../../auth/authActions'
 import { updateProfile } from '../userActions'
 
@@ -34,13 +34,13 @@ const SettingsDashboard = ({
           <Route
             path='/settings/basic'
             render={() => (
-              <BasicPage updateProfile={updateProfile} initialValues={user} />
+              <BasicPage initialValues={user} updateProfile={updateProfile} />
             )}
           />
           <Route
             path='/settings/about'
             render={() => (
-              <AboutPage updateProfile={updateProfile} initialValues={user} />
+              <AboutPage initialValues={user} updateProfile={updateProfile} />
             )}
           />
           <Route path='/settings/photos' component={PhotosPage} />

@@ -1,17 +1,17 @@
 /*global google*/
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import { Form, Segment, Button, Grid, Header } from 'semantic-ui-react'
 import { reduxForm, Field } from 'redux-form'
 import { withFirestore } from 'react-redux-firebase'
 import Script from 'react-load-script'
-import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
-import { Segment, Form, Button, Grid, Header } from 'semantic-ui-react'
 import {
   composeValidators,
   combineValidators,
   isRequired,
   hasLengthGreaterThan
 } from 'revalidate'
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
+import { connect } from 'react-redux'
 import { createEvent, updateEvent, cancelToggle } from '../eventActions'
 import TextInput from '../../../app/common/form/TextInput'
 import TextArea from '../../../app/common/form/TextArea'
@@ -107,13 +107,13 @@ class EventForm extends Component {
       })
   }
 
-  onFormSubmit = values => {
+  onFormSubmit = async values => {
     values.venueLatLng = this.state.venueLatLng
     if (this.props.initialValues.id) {
       if (Object.keys(values.venueLatLng).length === 0) {
         values.venueLatLng = this.props.event.venueLatLng
       }
-      this.props.updateEvent(values)
+      await this.props.updateEvent(values)
       this.props.history.goBack()
     } else {
       this.props.createEvent(values)
@@ -133,7 +133,7 @@ class EventForm extends Component {
     return (
       <Grid>
         <Script
-          url='https://maps.googleapis.com/maps/api/js?key=AIzaSyC1Oy3Ic6JyE6RR4eEbEFw2T-ynXjjWzTc&libraries=places'
+          url='https://maps.googleapis.com/maps/api/js?key=AIzaSyDUX8SIqI2_TkxTUFkNQeqIyO4urAqgrt0&libraries=places'
           onLoad={this.handleScriptLoaded}
         />
         <Grid.Column width={10}>
@@ -160,13 +160,13 @@ class EventForm extends Component {
                 rows={3}
                 placeholder='Tell us about your event'
               />
-              <Header sub color='teal' content='Event Location details' />
+              <Header sub color='teal' content='Event Location Details' />
               <Field
                 name='city'
                 type='text'
                 component={PlaceInput}
                 options={{ types: ['(cities)'] }}
-                placeholder='Event city'
+                placeholder='Event City'
                 onSelect={this.handleCitySelect}
               />
               {this.state.scriptLoaded && (
@@ -179,7 +179,7 @@ class EventForm extends Component {
                     radius: 1000,
                     types: ['establishment']
                   }}
-                  placeholder='Event venue'
+                  placeholder='Event Venue'
                   onSelect={this.handleVenueSelect}
                 />
               )}
@@ -190,7 +190,7 @@ class EventForm extends Component {
                 dateFormat='YYYY-MM-DD HH:mm'
                 timeFormat='HH:mm'
                 showTimeSelect
-                placeholder='Date and time of event'
+                placeholder='Date and Time of Event'
               />
               <Button
                 loading={loading}
@@ -207,13 +207,17 @@ class EventForm extends Component {
               >
                 Cancel
               </Button>
-              <Button
-                onClick={() => cancelToggle(!event.cancelled, event.id)}
-                type='button'
-                color={event.cancelled ? 'green' : 'red'}
-                floated='right'
-                content={event.cancelled ? 'Reactivate Event' : 'Cancel Event'}
-              />
+              {event.id && (
+                <Button
+                  onClick={() => cancelToggle(!event.cancelled, event.id)}
+                  type='button'
+                  floated='right'
+                  color={event.cancelled ? 'green' : 'red'}
+                  content={
+                    event.cancelled ? 'Reactivate event' : 'Cancel event'
+                  }
+                />
+              )}
             </Form>
           </Segment>
         </Grid.Column>
